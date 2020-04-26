@@ -1,6 +1,12 @@
 # yii-apache-logs-parser
 Apache's access log parser. Based on Yii 1.x
 
+## capabilities:
+1. Automatic reading of configuration files to find paths to log files and parse their format template
+2. Automatic parsing of the log file format
+3. Data output
+4. Data filtering (by value, condition or combination of conditions)
+
 ## installation
 ### 1. Clone this repository
 ### 1.2 Go to repository folder
