@@ -42,3 +42,30 @@ Apache's access log parser. Based on Yii 1.x
 #### php protected/yiic migrate
 #### php protected/yiic migrate --migrationPath=user.migrations 
 at this stage you can specify the username and password of the first user
+### 5. Configure your favorite web-server to serve this web application
+## Usage (Console)
+To to start parse logs run next command from "code" folder : 
+```
+php protected/yiic parser
+```
+You can add this command to your crontab
+## Usage (Web application)
+### After login you can:
+1. List all records and filter records by comparison operator (<, <=, >, >=, <> or =) at the beginning of each of your search values to specify how the comparison should be done. To combine operators use delimiter {AND}
+2. View datail info about each record
+3. Delete record from database
+4. Get results with JSON by adding nex GET params:
+```
+json=true
+login={your login}
+password={your password}
+```
+5. To filter results in JSON-queryes you can set GET params:
+```
+Log[field_name]=value
+```
+E.g.:
+```
+Log[status_last]=>404{AND}<409
+```
+
