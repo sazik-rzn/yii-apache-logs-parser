@@ -69,4 +69,9 @@ E.g.:
 ```
 Log[status_last]=>404{AND}<409
 ```
+## Possible problems and important notes:
+### I'm using namespases and this require PHP version 5.3.0 and higer (recommended 7+)
+### Field 'time' display as string, but storaged as timestamp. To filter use timestamp values
+### Comments in code is coming soon. Some comments are only in the file 'code/protected/components/ApacheAccessLog/Parser.php', as a demonstration of the fact that I understand how to do it good =)
+### Some parts of the log lines are parsed using generic constructs in regular expressions.
 
