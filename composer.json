@@ -1,0 +1,15 @@
+{
+    "name": "sazonov/apache-logs-parser",
+    "description": "Apache access log parser",
+    "type": "project",
+    "license": "BDS 3-clause",
+    "authors": [
+        {
+            "name": "Sazonov Vladimir",
+            "email": "sazik.rzn@yandex.ru"
+        }
+    ],
+    "require": {
+        "yiisoft/yii": "^1.1"
+    }
+}
