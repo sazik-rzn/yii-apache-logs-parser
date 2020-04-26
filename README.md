@@ -64,6 +64,7 @@ password={your password}
 ```
 Log[field_name]=value
 ```
+To see all available fields go to Log model "code/protected/models/Log.php"
 E.g.:
 ```
 Log[status_last]=>404{AND}<409
