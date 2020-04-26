@@ -75,14 +75,7 @@ return array(
             ),
         ),
         // database settings are configured in database.php
-        'db' => array(
-            'class' => 'CDbConnection',
-            'connectionString' => 'mysql:dbname=parser;host=127.0.0.1',
-            'username' => 'parser',
-            'password' => '11111111',
-            //'unix_socket' => '/tmp/mysql.sock'
-            //'emulatePrepare' => true, // необходимо для некоторых версий инсталляций MySQL
-        ),
+        'db' => require(__DIR__."/db.php"),
         'errorHandler' => array(
             // use 'site/error' action to display errors
             'errorAction' => YII_DEBUG ? null : 'site/error',

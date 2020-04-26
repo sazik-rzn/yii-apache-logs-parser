@@ -28,6 +28,8 @@ class TbButtonColumn extends CButtonColumn
 	 * @var string the delete button icon (defaults to 'trash').
 	 */
 	public $deleteButtonIcon = 'trash';
+        
+        public $template='{view} {delete}';
 
 	/**
 	 * Initializes the default buttons (view, update and delete).

@@ -1,5 +1,6 @@
 composer.phar
 composer.lock
+/code/protected/config/db.php
 /nbproject/
 /vendor/
 
