@@ -1,6 +1,7 @@
 {
     "name": "sazonov/apache-logs-parser",
     "description": "Apache access log parser",
+    "keywords": ["yii", "yii1" "framework", "apache", "log", "parser", "php", "api", "application template"],
     "type": "project",
     "license": "BDS 3-clause",
     "authors": [
