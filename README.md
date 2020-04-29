@@ -14,7 +14,7 @@ Apache's access log parser. Based on Yii 1.x
 ### 2. Create MySQL database configuration file "code/protected/config/db.php" e.g.:
 ```
         return array(
-            'class' => 'CDbConnection',
+            'class' => 'ECDbConnection',
             'connectionString' => 'mysql:dbname=parser;host=127.0.0.1',
             'username' => 'parser',
             'password' => '11111111'
