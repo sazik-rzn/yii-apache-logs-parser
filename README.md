@@ -20,6 +20,10 @@ Apache's access log parser. Based on Yii 1.x
             'password' => '11111111'
         );
 ```
+### 2.1. Configure your MySQL server
+```
+if mysql system variable 'sql_mode' contains 'only_full_group_by' - delete this
+```
 ### 3. Edit configuration for Apache Logs Parser component in file "code/protected/config/console.php" in section "components", e.g.:
 #### If your system user(who run console command) can read Apache's configuration files
 ```
