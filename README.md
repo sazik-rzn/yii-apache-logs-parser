@@ -36,9 +36,12 @@ Apache's access log parser. Based on Yii 1.x
             'logFiles'=>[
               ...,
               [
-                'path'=>'/var/log/apache2/access.log', //path to log file
-                'format'=>"%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" // format of log file
-              ]
+                'path'=>'/var/log/apache2/access.log', //path to log file with default format
+              ],
+              [
+                'path'=>'/var/log/apache2/access.log', //path to log file with custom format
+                'format'=>"%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" // custom format of log file
+              ],
               ...,
             ]
         ]
@@ -57,10 +60,10 @@ php protected/yiic parser
 You can add this command to your crontab
 ## Usage (Web application)
 ### After login you can:
-1. List all records and filter records by comparison operator (<, <=, >, >=, <> or =) at the beginning of each of your search values to specify how the comparison should be done. To combine operators use delimiter {AND}
+1. List all records, filter,group,sort records and show API-query preview
 2. View datail info about each record
 3. Delete record from database
-4. Get results with JSON by adding nex GET params:
+4. Get results with JSON by adding next GET params:
 ```
 json=true
 login={your login}
@@ -71,9 +74,15 @@ password={your password}
 Log[field_name]=value
 ```
 To see all available fields go to Log model "code/protected/models/Log.php"
+To filter records use comparison operator (<, <=, >, >=, <> or =) at the beginning of each of your search values to specify how the comparison should be done. To combine operators use delimiter {AND}
 E.g.:
 ```
 Log[status_last]=>404{AND}<409
+```
+To sort or group results add 'group_by' or 'Log_sort' GET-params, e.g.:
+```
+Log_sort=id.asc // change asc to desc for change sort direction
+grou_by=remote_host // group by field remote_host
 ```
 ## Possible problems and important notes:
 ### I'm using namespases and this require PHP version 5.3.0 and higer (recommended 7+)
