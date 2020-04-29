@@ -157,7 +157,7 @@ class SiteController extends Controller {
                 $result[$_model->id] = $_model->asArray();
             }
         }
-        echo "<pre>" . json_encode($result, JSON_PRETTY_PRINT) . "</pre>";
+        echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
     /**
