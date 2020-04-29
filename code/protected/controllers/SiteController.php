@@ -6,7 +6,7 @@ class SiteController extends Controller {
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
-    public $layout = '//layouts/column2';
+    public $layout = '//layouts/main';
 
     /**
      * @return array action filters
@@ -38,7 +38,7 @@ class SiteController extends Controller {
         }
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('admin', 'index', 'view', 'delete'),
+                'actions' => array('data', 'index', 'view', 'delete'),
                 'users' => UserModule::getAdmins(),
             ),
             array('deny', // deny all users
@@ -85,29 +85,79 @@ class SiteController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
-        return $this->redirect(['admin']);
+        return $this->redirect(['data']);
     }
 
     /**
      * Manages all models.
      */
-    public function actionAdmin($json = false) {
+    public function actionData($group_id = false, $json = false, $list = false) {
+        $dataProvider = $this->getDataProvider($group_id);
+        if ($json !== false) {
+            $this->renderJson($dataProvider);
+        } elseif ($group_id !== false) {
+            if (($group = $this->getGroupProvider($group_id, $dataProvider))) {
+                $this->renderPartial('group', [
+                    'provider' => $group,
+                    'id' => $group_id
+                ]);
+            } else {
+                throw new ErrorException("Can't find group {$group_id}");
+            }
+        } elseif ($list !== false) {
+            $this->renderPartial('list', array(
+                'provider' => $dataProvider,
+            ));
+        } else {
+            $this->render('page', array(
+                'provider' => $dataProvider,
+            ));
+        }
+    }
+
+    public function getGroupProvider($group_id, $provider) {
+        if ($provider instanceof CActiveDataProvider) {
+            $provider->criteria->select = ['t.id', 't.' . $_GET['group_by']];
+            $provider->criteria->compare('t.id', $group_id, false);
+            $provider->countCriteria->select = ['t.id', 't.' . $_GET['group_by']];
+            $provider->countCriteria->compare('t.id', $group_id, false);
+            $models = $provider->getData();
+            while (count($models) > 0) {
+                foreach ($models as $key => $model) {
+                    if ($model->id === $group_id) {
+                        return $model->getGroupProvider();
+                    }
+                    unset($models[$key]);
+                }
+                if ($provider->pagination->currentPage < $provider->pagination->pageCount) {
+                    $provider->pagination->setCurrentPage($provider->pagination->currentPage + 1);
+                    $models = $provider->getData();
+                }
+            }
+        }
+        return false;
+    }
+
+    public function getDataProvider($group_id = false) {
         $model = new Log('search');
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['Log']))
             $model->attributes = $_GET['Log'];
-        if ($json) {
-            $result = [];
-            $dataProvider = $model->search();
-            foreach ($dataProvider->getData() as $model) {
-                $result[$model->id] = $model->attributes;
+        return $model->search();
+    }
+
+    /**
+     * 
+     * @param CActiveDataProvider $data_provider
+     */
+    public function renderJson($data_provider) {
+        $result = [];
+        if ($data_provider) {
+            foreach ($data_provider->getData() as $_model) {
+                $result[$_model->id] = $_model->asArray();
             }
-            echo json_encode($result, JSON_PRETTY_PRINT);
-        } else {
-            $this->render('admin', array(
-                'model' => $model,
-            ));
         }
+        echo "<pre>" . json_encode($result, JSON_PRETTY_PRINT) . "</pre>";
     }
 
     /**

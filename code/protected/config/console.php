@@ -34,7 +34,13 @@ return array(
         'ApacheAccessLog'=>[
             'class'=>'application\components\ApacheAccessLog\Parser',
             'apacheConfigFile'=>'/etc/apache2/httpd.conf',
-            'enabledVHostsPath'=>'/private/etc/apache2/extra/httpd-vhosts.conf'
+            'enabledVHostsPath'=>'/private/etc/apache2/extra/httpd-vhosts.conf',
+            'logFiles'=>[
+                [
+                    'path'=>'/Users/sazonov/downloads/access.log',
+                    'format'=>"%h %l %u %t \"%r\" %>s %b"
+                ]
+            ]
         ]
     ),
     'modules' => [

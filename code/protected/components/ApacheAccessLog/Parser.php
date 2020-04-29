@@ -94,7 +94,11 @@ class Parser extends \CComponent {
 
     public function parse() {
         foreach ($this->logFiles as $log) {
-            $logParser = new LogParser($log['path'], $log['format']);
+            $format = "%h %l %u %t \"%r\" %>s %b";
+            if(isset($log['format'])){
+                $format = $log['format'];
+            }
+            $logParser = new LogParser($log['path'], $format);
             $this->_parsedLogs[$log['path']] = $logParser->parsed;
         }
         return $this->_parsedLogs;

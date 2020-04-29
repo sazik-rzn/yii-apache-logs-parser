@@ -50,6 +50,9 @@
  */
 class Log extends CActiveRecord {
 
+    public static $_SearchCriteria;
+    protected $_groupProvider;
+
     /**
      * @return string the associated database table name
      */
@@ -74,14 +77,16 @@ class Log extends CActiveRecord {
         );
     }
 
-    /**
-     * @return array relational rules.
-     */
-    public function relations() {
-        // NOTE: you may need to adjust the relation name and the related
-        // class name for the relations automatically generated below.
-        return array(
-        );
+    public function searchebleFields() {
+        $result = [];
+        foreach ($this->rules() as $rule) {
+            if (isset($rule['on']) && $rule['on'] == 'search') {
+                foreach (explode(',', $rule[0]) as $chunkRule) {
+                    $result[] = trim($chunkRule);
+                }
+            }
+        }
+        return $result;
     }
 
     public function setAttributes($values, $safeOnly = true) {
@@ -164,24 +169,67 @@ class Log extends CActiveRecord {
      * based on the search/filter conditions.
      */
     public function search() {
-        // @todo Please modify the following code to remove attributes that should not be searched.
-
-        $criteria = new CDbCriteria;
+        $criteria = new CDbCriteria();
+        if (isset($_GET['group_by']) && in_array($_GET['group_by'], $this->searchebleFields())) {
+            $criteria->group = "t." . $_GET['group_by'];
+        }
         foreach ($this->attributes as $name => $attr) {
             if (strpos($attr, "{AND}") !== false) {
                 $expl = explode("{AND}", $attr);
-                foreach ($expl as $val){
-                    $criteria->compare($name, $val, true);
+                foreach ($expl as $val) {
+                    $criteria->compare("t.{$name}", $val, true);
                 }
-            }
-            else{
-                $criteria->compare($name, $attr, true);
+            } else {
+                $criteria->compare("t.{$name}", $attr, ($name == 'id') ? false : true);
             }
         }
-
+        static::$_SearchCriteria = clone $criteria;
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
+    }
+
+    /**
+     * 
+     * @return \CActiveDataProvider
+     */
+    public function getGroupProvider() {
+        if ($this->_groupProvider === null && isset($_GET['group_by']) && in_array($_GET['group_by'], $this->searchebleFields())) {
+            $criteria = clone static::$_SearchCriteria;
+            $criteria->group = '';
+            $criteria->compare("t.{$_GET['group_by']}", $this->{$_GET['group_by']});
+            $this->_groupProvider = new CActiveDataProvider($this, array(
+                'criteria' => $criteria,
+                'pagination' => [
+                    'pageSize' => 10,
+                    'pageVar' => "group_{$this->id}_page"
+                ]
+            ));
+        } else {
+            $this->_groupProvider = false;
+        }
+        return $this->_groupProvider;
+    }
+
+    public function asArray($skipGroup = false) {
+        $data = [];
+        $isFirst = true;
+        if (!$skipGroup && ($provider = $this->getGroupProvider())) {
+            foreach ($provider->getData() as $model) {
+                if ($isFirst) {
+                    $isFirst = false;
+                    $data['grouped_by'] = $_GET['group_by'];
+                    $data['grouped_by_value'] = $this->{$_GET['group_by']};
+                }
+                $data['grouped'][$model->id] = $model->asArray(true);
+            }
+        }
+        if (!isset($data['grouped']) || empty($data['grouped'])) {
+            $data = $this->attributes;
+            if (isset($data['grouped']))
+                unset($data['grouped']);
+        }
+        return $data;
     }
 
     /**

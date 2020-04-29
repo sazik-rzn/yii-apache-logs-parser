@@ -17,16 +17,18 @@ return array(
     // autoloading model and component classes
     'import' => array(
         'application.models.*',
+        'application.widgets.*',
         'application.components.*',
-         'application.modules.user.*',
+        'application.modules.user.*',
         'application.modules.user.models.*',
         'application.modules.user.components.*',
+        'bootstrap.widgets.*'
     ),
     'modules' => array(
         'gii' => array(
             'class' => 'system.gii.GiiModule',
             'password' => '1',
-            'generatorPaths'=>['application.extensions.bootstrap.gii'],
+            'generatorPaths' => ['application.extensions.bootstrap.gii'],
             // If removed, Gii defaults to localhost only. Edit carefully to taste.
             'ipFilters' => array('127.0.0.1', '::1'),
         ),
@@ -66,16 +68,16 @@ return array(
             'urlFormat' => 'path',
             //'showScriptName'=>false,
             'rules' => array(
-                '/' => 'site/index',
+                '/' => 'site/data',
                 '/<id:\d+>' => 'site/view',
                 '/delete/<id:\d+>' => 'site/delete',
-                '/full'=>'site/admin',
-                '/login'=>'user/login/login',
-                 'site/login'=>'user/login/login'
+                '/data' => 'site/data',
+                '/login' => 'user/login/login',
+                'site/login' => 'user/login/login'
             ),
         ),
         // database settings are configured in database.php
-        'db' => require(__DIR__."/db.php"),
+        'db' => require(__DIR__ . "/db.php"),
         'errorHandler' => array(
             // use 'site/error' action to display errors
             'errorAction' => YII_DEBUG ? null : 'site/error',
@@ -87,6 +89,11 @@ return array(
                     'class' => 'CFileLogRoute',
                     'levels' => 'error, warning',
                 ),
+//                array(
+//                    'class' => 'CProfileLogRoute',
+//                    'levels' => 'profile',
+//                    'enabled' => true,
+//                ),
             // uncomment the following to show log messages on web pages
             /*
               array(
