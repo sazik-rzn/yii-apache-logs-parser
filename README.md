@@ -46,7 +46,7 @@ Apache's access log parser. Based on Yii 1.x
             ]
         ]
 ```
-for test you can use example log file code/protected/data/access.log with format "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\""
+for test you can use example log file code/protected/data/access.log with format ```"%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\""```
 ### 4. Run migrations
 #### cd code
 #### php protected/yiic migrate
